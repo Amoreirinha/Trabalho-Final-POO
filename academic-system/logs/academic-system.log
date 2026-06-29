@@ -174,3 +174,57 @@
 2026-06-29 03:20:28 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR
 2026-06-29 03:20:41 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
 2026-06-29 03:20:56 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'admin', Papel: ADMIN
+2026-06-29 03:22:04 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'admin', Papel: ADMIN
+2026-06-29 03:22:12 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:22:54 [INFO] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.0.Final
+2026-06-29 03:22:54 [INFO] o.e.a.system.service.TurmaService - Turma registrada: dce67 - Orientação a ...
+2026-06-29 03:23:02 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:23:02 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: ADMIN
+2026-06-29 03:23:08 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: ADMIN
+2026-06-29 03:23:32 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:24:20 [INFO] o.e.a.s.service.AssessmentService - Avaliação EXAM registrada na turma dce67.
+2026-06-29 03:24:29 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:24:29 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: ADMIN
+2026-06-29 03:24:40 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:24:40 [INFO] o.e.a.system.service.ReportService - Gerando relatório de pesos. Papel: ADMIN
+2026-06-29 03:24:56 [INFO] o.e.a.system.service.ReportService - Gerando relatório de persistência. Papel: ADMIN
+2026-06-29 03:25:04 [INFO] o.e.a.system.service.ReportService - Gerando relatório de pesos. Papel: ADMIN
+2026-06-29 03:25:06 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: ADMIN
+2026-06-29 03:25:12 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:25:23 [INFO] o.e.a.s.service.AssessmentService - Avaliação SEMINAR registrada na turma dce67.
+2026-06-29 03:25:27 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:25:27 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: ADMIN
+2026-06-29 03:25:28 [INFO] o.e.a.system.service.ReportService - Gerando relatório de pesos. Papel: ADMIN
+2026-06-29 03:25:37 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: ADMIN
+2026-06-29 03:25:55 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:26:00 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:26:00 [INFO] o.e.a.system.service.ReportService - Gerando relatório de persistência. Papel: ADMIN
+2026-06-29 03:27:01 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:27:07 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:27:23 [INFO] o.e.a.s.service.AssessmentService - Avaliação EXAM registrada na turma dce67.
+2026-06-29 03:27:26 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:27:26 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR
+2026-06-29 03:27:31 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR
+2026-06-29 03:27:35 [INFO] o.e.a.system.service.ReportService - Gerando relatório de pesos. Papel: PROFESSOR
+2026-06-29 03:27:40 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:27:40 [INFO] o.e.a.system.service.ReportService - Gerando relatório de pesos. Papel: PROFESSOR
+2026-06-29 03:29:29 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:29:32 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:29:32 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR
+2026-06-29 03:29:57 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:29:59 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:29:59 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR
+2026-06-29 03:31:37 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:31:38 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:31:38 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR
+2026-06-29 03:32:48 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:32:49 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:32:49 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR
+2026-06-29 03:33:39 [WARN] o.e.a.s.s.AuthenticationService - Tentativa de login malsucedida para o usuário: 'pprofessor'
+2026-06-29 03:33:49 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:33:51 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:33:51 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR
+2026-06-29 03:38:15 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:38:22 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:38:29 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:38:29 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR

@@ -11,17 +11,32 @@
 
     <padding><Insets top="28" right="32" bottom="28" left="32"/></padding>
 
-    <Text text="Configurar Persistência" styleClass="form-title"/>
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Text text="💾" style="-fx-font-size: 28px;"/>
+        <Text text="Configurar Persistência" styleClass="form-title"/>
+    </HBox>
 
-    <Label text="Selecione o formato de persistência:"/>
+    <Separator style="-fx-background-color: #E5E7EB; -fx-padding: 4 0;"/>
 
-    <VBox spacing="10">
-        <RadioButton fx:id="txtRadio" text="TXT"/>
-        <RadioButton fx:id="xmlRadio" text="XML"/>
-        <RadioButton fx:id="jsonRadio" text="JSON"/>
+    <Label text="Selecione o formato de persistência dos dados:" styleClass="label"/>
+
+    <VBox spacing="8" style="-fx-padding: 8 0 0 20;">
+        <RadioButton fx:id="txtRadio" text="TXT - Arquivo de texto simples">
+            <tooltip><Tooltip text="Formato TXT legível, sem estrutura hierárquica"/></tooltip>
+        </RadioButton>
+        <RadioButton fx:id="xmlRadio" text="XML - Formato estruturado com tags">
+            <tooltip><Tooltip text="Formato XML com hierarquia e validação"/></tooltip>
+        </RadioButton>
+        <RadioButton fx:id="jsonRadio" text="JSON - Formato leve e estruturado">
+            <tooltip><Tooltip text="Formato JSON moderno, ideal para integrações"/></tooltip>
+        </RadioButton>
     </VBox>
 
-    <Label fx:id="feedbackLabel"/>
+    <Label fx:id="feedbackLabel" styleClass="feedback-label" wrapText="true"/>
 
-    <Button fx:id="confirmButton" text="Confirmar" onAction="#handleConfirm" styleClass="button"/>
+    <Button fx:id="confirmButton" text="Confirmar Configuração" onAction="#handleConfirm" 
+            styleClass="button" maxWidth="Infinity">
+        <graphic><Text text="✅ "/></graphic>
+        <padding><Insets top="10" bottom="10"/></padding>
+    </Button>
 </VBox>
