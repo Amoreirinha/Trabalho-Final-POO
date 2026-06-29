@@ -1,6 +1,6 @@
 package org.example.academic.system.repository;
 
-import org.example.academic.system.model.AcademicClass;
+import org.example.academic.system.model.Turma;
 
 import java.util.List;
 
@@ -16,5 +16,5 @@ public interface AcademicClassRepository {
      *
      * @param classes lista de turmas a serem salvas
      */
-    void save(List<AcademicClass> classes);
+    void save(List<Turma> classes);
 }
