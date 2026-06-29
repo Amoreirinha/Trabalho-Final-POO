@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssessmentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">academic-system</a> &gt; <a href="index.source.html" class="el_package">org.example.academic.system.service</a> &gt; <span class="el_source">AssessmentService.java</span></div><h1>AssessmentService.java</h1><pre class="source lang-java linenums">package org.example.academic.system.service;
+
+import org.example.academic.system.exception.AcademicSystemException;
+import org.example.academic.system.exception.AssessmentException;
+import org.example.academic.system.model.AcademicClass;
+import org.example.academic.system.model.AcademicSystem;
+import org.example.academic.system.model.Assessment;
+import org.example.academic.system.model.Assignment;
+import org.example.academic.system.model.Exam;
+import org.example.academic.system.model.PracticalAssignment;
+import org.example.academic.system.model.Seminar;
+import org.example.academic.system.validation.DomainValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+
+/**
+ * Serviço responsável pelo registro de avaliações (TUS-2397).
+ */
+public class AssessmentService {
+
+<span class="fc" id="L23">    private static final Logger logger = LoggerFactory.getLogger(AssessmentService.class);</span>
+    private final AcademicSystem academicSystem;
+
+<span class="nc" id="L26">    public AssessmentService() {</span>
+<span class="nc" id="L27">        this.academicSystem = AcademicSystem.getInstance();</span>
+<span class="nc" id="L28">    }</span>
+
+<span class="fc" id="L30">    public AssessmentService(AcademicSystem academicSystem) {</span>
+<span class="fc" id="L31">        this.academicSystem = academicSystem;</span>
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * Registra uma avaliação na turma indicada pelo código (US-2361).
+     */
+    public void registerAssessment(String classCode, String assessmentType,
+                                   Double value, Double weight) {
+<span class="fc" id="L39">        Optional&lt;AcademicClass&gt; optClass = academicSystem.findByCode(classCode);</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (optClass.isEmpty()) {</span>
+<span class="fc" id="L41">            logger.warn(&quot;Tentativa de registrar avaliação em turma inexistente: {}&quot;, classCode);</span>
+<span class="fc" id="L42">            return; // AC6/AC7: não adiciona se turma não existe</span>
+        }
+
+<span class="fc" id="L45">        Assessment assessment = createAssessment(assessmentType, value, weight);</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (assessment == null) {</span>
+<span class="fc" id="L47">            logger.warn(&quot;Tipo de avaliação inválido: {}&quot;, assessmentType);</span>
+<span class="fc" id="L48">            return; // AC5/AC6: tipo inválido não adiciona</span>
+        }
+
+<span class="fc" id="L51">        DomainValidator.validate(assessment);</span>
+<span class="fc" id="L52">        optClass.get().addAssessment(assessment);</span>
+<span class="fc" id="L53">        logger.info(&quot;Avaliação {} registrada na turma {}.&quot;, assessmentType, classCode);</span>
+<span class="fc" id="L54">    }</span>
+
+    private Assessment createAssessment(String type, Double value, Double weight) {
+<span class="pc bpc" id="L57" title="3 of 5 branches missed.">        return switch (type.toUpperCase()) {</span>
+<span class="fc" id="L58">            case &quot;EXAM&quot; -&gt; new Exam(value, weight);</span>
+<span class="nc" id="L59">            case &quot;PRACTICAL_ASSIGNMENT&quot; -&gt; new PracticalAssignment(value, weight);</span>
+<span class="nc" id="L60">            case &quot;SEMINAR&quot; -&gt; new Seminar(value, weight);</span>
+<span class="nc" id="L61">            case &quot;ASSIGNMENT&quot; -&gt; new Assignment(value, weight);</span>
+<span class="fc" id="L62">            default -&gt; null;</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

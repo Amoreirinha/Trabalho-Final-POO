@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoleBasedMenu.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">academic-system</a> &gt; <a href="index.source.html" class="el_package">org.example.academic.system.security</a> &gt; <span class="el_source">RoleBasedMenu.java</span></div><h1>RoleBasedMenu.java</h1><pre class="source lang-java linenums">package org.example.academic.system.security;
+
+import org.example.academic.system.exception.InvalidMenuOptionException;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/**
+ * Gera e exibe menus sequenciais baseados no papel do usuário autenticado.
+ * Implementa US-2378 (renderização dinâmica) e US-2380 (numeração sequencial por papel).
+ */
+<span class="nc" id="L12">public class RoleBasedMenu {</span>
+
+    /**
+     * Retorna o mapa de opções do menu para o papel especificado.
+     * A numeração é sequencial e específica por papel (US-2380, AC-3).
+     *
+     * @param role papel do usuário autenticado
+     * @return mapa ordenado de número -&gt; descrição da opção
+     */
+    public static Map&lt;Integer, String&gt; getMenuOptions(Role role) {
+<span class="nc" id="L22">        Map&lt;Integer, String&gt; options = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L23">        int index = 1;</span>
+
+        // Opções comuns a ambos os papéis
+<span class="nc" id="L26">        options.put(index++, &quot;Cadastrar avaliação em turma&quot;);</span>
+<span class="nc" id="L27">        options.put(index++, &quot;Gerar relatório de avaliações por turma&quot;);</span>
+<span class="nc" id="L28">        options.put(index++, &quot;Gerar relatório de peso das avaliações&quot;);</span>
+
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if (role == Role.ADMIN) {</span>
+            // Opções exclusivas do ADMIN (US-2378, AC-2 e AC-3)
+<span class="nc" id="L32">            options.put(index++, &quot;Cadastrar turma&quot;);</span>
+<span class="nc" id="L33">            options.put(index++, &quot;Salvar dados acadêmicos&quot;);</span>
+<span class="nc" id="L34">            options.put(index++, &quot;Configurar tipo de persistência&quot;);</span>
+<span class="nc" id="L35">            options.put(index++, &quot;Gerar relatório de configuração de persistência&quot;);</span>
+        }
+
+<span class="nc" id="L38">        options.put(index++, &quot;Logout&quot;);</span>
+<span class="nc" id="L39">        options.put(index, &quot;Sair&quot;);</span>
+
+<span class="nc" id="L41">        return options;</span>
+    }
+
+    /**
+     * Exibe o menu no console para o papel especificado.
+     *
+     * @param role papel do usuário autenticado
+     */
+    public static void displayMenu(Role role) {
+<span class="nc" id="L50">        System.out.println(&quot;\n========== MENU ==========&quot;);</span>
+<span class="nc" id="L51">        System.out.println(&quot;Papel: &quot; + role);</span>
+<span class="nc" id="L52">        System.out.println(&quot;---------------------------&quot;);</span>
+<span class="nc" id="L53">        Map&lt;Integer, String&gt; options = getMenuOptions(role);</span>
+<span class="nc" id="L54">        options.forEach((num, desc) -&gt; System.out.printf(&quot;%d. %s%n&quot;, num, desc));</span>
+<span class="nc" id="L55">        System.out.println(&quot;===========================&quot;);</span>
+<span class="nc" id="L56">        System.out.print(&quot;Escolha uma opção: &quot;);</span>
+<span class="nc" id="L57">    }</span>
+
+    /**
+     * Valida se a opção escolhida existe para o papel atual.
+     * Lança InvalidMenuOptionException caso a opção não exista (US-2368, AC-2).
+     *
+     * @param option opção escolhida pelo usuário
+     * @param role   papel do usuário autenticado
+     */
+    public static void validateOption(int option, Role role) {
+<span class="nc" id="L67">        Map&lt;Integer, String&gt; options = getMenuOptions(role);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (!options.containsKey(option)) {</span>
+<span class="nc" id="L69">            throw new InvalidMenuOptionException(</span>
+<span class="nc" id="L70">                &quot;Opção inválida: &quot; + option + &quot;. Escolha entre 1 e &quot; + options.size() + &quot;.&quot;</span>
+            );
+        }
+<span class="nc" id="L73">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

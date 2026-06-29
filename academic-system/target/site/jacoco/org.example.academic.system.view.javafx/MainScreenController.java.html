@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainScreenController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">academic-system</a> &gt; <a href="index.source.html" class="el_package">org.example.academic.system.view.javafx</a> &gt; <span class="el_source">MainScreenController.java</span></div><h1>MainScreenController.java</h1><pre class="source lang-java linenums">package org.example.academic.system.view.javafx;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import org.example.academic.system.model.Role;
+import org.example.academic.system.model.User;
+
+/**
+ * TUS-2408 - Create JavaFX role-based main screen.
+ *
+ * Displays operations available to the authenticated user according to their role.
+ * ADMIN sees all options; PROFESSOR sees only professor-related options.
+ * Role-based visibility does NOT replace authorization checks in the service/controller layer.
+ */
+<span class="nc" id="L20">public class MainScreenController {</span>
+
+    @FXML private Label welcomeLabel;
+    @FXML private Label roleLabel;
+
+    // ADMIN-only buttons
+    @FXML private Button registerClassButton;
+    @FXML private Button persistenceConfigButton;
+    @FXML private Button persistenceReportButton;
+
+    // Common buttons
+    @FXML private Button registerAssessmentButton;
+    @FXML private Button classReportButton;
+    @FXML private Button weightReportButton;
+    @FXML private Button visualizeDataButton;
+    @FXML private Button logoutButton;
+
+    @FXML private VBox adminSection;
+
+    private User currentUser;
+
+    public void initializeWithUser(User user) {
+<span class="nc" id="L42">        this.currentUser = user;</span>
+<span class="nc" id="L43">        welcomeLabel.setText(&quot;Bem-vindo, &quot; + user.getUsername());</span>
+<span class="nc" id="L44">        roleLabel.setText(&quot;Perfil: &quot; + user.getRole().name());</span>
+
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        boolean isAdmin = user.getRole() == Role.ADMIN;</span>
+<span class="nc" id="L47">        adminSection.setVisible(isAdmin);</span>
+<span class="nc" id="L48">        adminSection.setManaged(isAdmin);</span>
+<span class="nc" id="L49">    }</span>
+
+    @FXML
+    private void handleRegisterClass() {
+<span class="nc" id="L53">        openScreen(&quot;/org/example/academic/system/view/javafx/ClassRegistrationScreen.fxml&quot;,</span>
+                &quot;Cadastrar Turma&quot;, 480, 320, controller -&gt; {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">                    if (controller instanceof ClassRegistrationController c) {</span>
+<span class="nc" id="L56">                        c.initializeWithUser(currentUser);</span>
+                    }
+<span class="nc" id="L58">                });</span>
+<span class="nc" id="L59">    }</span>
+
+    @FXML
+    private void handleRegisterAssessment() {
+<span class="nc" id="L63">        openScreen(&quot;/org/example/academic/system/view/javafx/AssessmentRegistrationScreen.fxml&quot;,</span>
+                &quot;Cadastrar Avaliação&quot;, 520, 400, controller -&gt; {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                    if (controller instanceof AssessmentRegistrationController c) {</span>
+<span class="nc" id="L66">                        c.initializeWithUser(currentUser);</span>
+                    }
+<span class="nc" id="L68">                });</span>
+<span class="nc" id="L69">    }</span>
+
+    @FXML
+    private void handleClassReport() {
+<span class="nc" id="L73">        openScreen(&quot;/org/example/academic/system/view/javafx/ReportScreen.fxml&quot;,</span>
+                &quot;Relatórios&quot;, 680, 480, controller -&gt; {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                    if (controller instanceof ReportScreenController c) {</span>
+<span class="nc" id="L76">                        c.initializeWithUser(currentUser);</span>
+<span class="nc" id="L77">                        c.showClassSummaryReport();</span>
+                    }
+<span class="nc" id="L79">                });</span>
+<span class="nc" id="L80">    }</span>
+
+    @FXML
+    private void handleWeightReport() {
+<span class="nc" id="L84">        openScreen(&quot;/org/example/academic/system/view/javafx/ReportScreen.fxml&quot;,</span>
+                &quot;Relatório de Pesos&quot;, 680, 480, controller -&gt; {
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                    if (controller instanceof ReportScreenController c) {</span>
+<span class="nc" id="L87">                        c.initializeWithUser(currentUser);</span>
+<span class="nc" id="L88">                        c.showWeightReport();</span>
+                    }
+<span class="nc" id="L90">                });</span>
+<span class="nc" id="L91">    }</span>
+
+    @FXML
+    private void handlePersistenceConfig() {
+<span class="nc" id="L95">        openScreen(&quot;/org/example/academic/system/view/javafx/PersistenceConfigScreen.fxml&quot;,</span>
+                &quot;Configuração de Persistência&quot;, 440, 300, controller -&gt; {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                    if (controller instanceof PersistenceConfigController c) {</span>
+<span class="nc" id="L98">                        c.initializeWithUser(currentUser);</span>
+                    }
+<span class="nc" id="L100">                });</span>
+<span class="nc" id="L101">    }</span>
+
+    @FXML
+    private void handlePersistenceReport() {
+<span class="nc" id="L105">        openScreen(&quot;/org/example/academic/system/view/javafx/ReportScreen.fxml&quot;,</span>
+                &quot;Relatório de Persistência&quot;, 680, 480, controller -&gt; {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                    if (controller instanceof ReportScreenController c) {</span>
+<span class="nc" id="L108">                        c.initializeWithUser(currentUser);</span>
+<span class="nc" id="L109">                        c.showPersistenceReport();</span>
+                    }
+<span class="nc" id="L111">                });</span>
+<span class="nc" id="L112">    }</span>
+
+    @FXML
+    private void handleVisualizeData() {
+<span class="nc" id="L116">        openScreen(&quot;/org/example/academic/system/view/javafx/VisualizationScreen.fxml&quot;,</span>
+                &quot;Visualizar Dados&quot;, 720, 520, controller -&gt; {
+<span class="nc bnc" id="L118" title="All 2 branches missed.">                    if (controller instanceof VisualizationScreenController c) {</span>
+<span class="nc" id="L119">                        c.initializeWithUser(currentUser);</span>
+                    }
+<span class="nc" id="L121">                });</span>
+<span class="nc" id="L122">    }</span>
+
+    @FXML
+    private void handleLogout() {
+        try {
+<span class="nc" id="L127">            FXMLLoader loader = new FXMLLoader(</span>
+<span class="nc" id="L128">                    getClass().getResource(&quot;/org/example/academic/system/view/javafx/LoginScreen.fxml&quot;));</span>
+<span class="nc" id="L129">            Scene scene = new Scene(loader.load(), 420, 320);</span>
+<span class="nc" id="L130">            scene.getStylesheets().add(</span>
+<span class="nc" id="L131">                    getClass().getResource(&quot;/org/example/academic/system/view/javafx/styles.css&quot;).toExternalForm());</span>
+
+<span class="nc" id="L133">            Stage stage = (Stage) logoutButton.getScene().getWindow();</span>
+<span class="nc" id="L134">            stage.setScene(scene);</span>
+<span class="nc" id="L135">            stage.setResizable(false);</span>
+<span class="nc" id="L136">            stage.setTitle(&quot;Academic System&quot;);</span>
+<span class="nc" id="L137">        } catch (Exception ex) {</span>
+<span class="nc" id="L138">            ex.printStackTrace();</span>
+<span class="nc" id="L139">        }</span>
+<span class="nc" id="L140">    }</span>
+
+    private void openScreen(String fxmlPath, String title, int width, int height,
+                            java.util.function.Consumer&lt;Object&gt; controllerSetup) {
+        try {
+<span class="nc" id="L145">            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));</span>
+<span class="nc" id="L146">            Scene scene = new Scene(loader.load(), width, height);</span>
+<span class="nc" id="L147">            scene.getStylesheets().add(</span>
+<span class="nc" id="L148">                    getClass().getResource(&quot;/org/example/academic/system/view/javafx/styles.css&quot;).toExternalForm());</span>
+
+<span class="nc" id="L150">            controllerSetup.accept(loader.getController());</span>
+
+<span class="nc" id="L152">            Stage stage = new Stage();</span>
+<span class="nc" id="L153">            stage.setTitle(title);</span>
+<span class="nc" id="L154">            stage.setScene(scene);</span>
+<span class="nc" id="L155">            stage.initOwner(logoutButton.getScene().getWindow());</span>
+<span class="nc" id="L156">            stage.show();</span>
+<span class="nc" id="L157">        } catch (Exception ex) {</span>
+<span class="nc" id="L158">            ex.printStackTrace();</span>
+<span class="nc" id="L159">        }</span>
+<span class="nc" id="L160">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XmlAcademicClassRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">academic-system</a> &gt; <a href="index.source.html" class="el_package">org.example.academic.system.repository</a> &gt; <span class="el_source">XmlAcademicClassRepository.java</span></div><h1>XmlAcademicClassRepository.java</h1><pre class="source lang-java linenums">package org.example.academic.system.repository;
+
+import org.example.academic.system.model.AcademicClass;
+import org.example.academic.system.model.Assessment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.util.List;
+
+/**
+ * Repositório que persiste turmas e avaliações em arquivo XML (US-2373).
+ * Usa a API DOM padrão do Java — sem dependência externa.
+ */
+<span class="fc" id="L24">public class XmlAcademicClassRepository implements AcademicClassRepository {</span>
+
+<span class="fc" id="L26">    private static final Logger logger = LoggerFactory.getLogger(XmlAcademicClassRepository.class);</span>
+    private static final String FILE_PATH = &quot;academic_data.xml&quot;;
+
+    @Override
+    public void save(List&lt;AcademicClass&gt; classes) {
+<span class="fc" id="L31">        logger.info(&quot;Iniciando persistência em XML. Arquivo: '{}'&quot;, FILE_PATH);</span>
+
+        try {
+<span class="fc" id="L34">            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();</span>
+<span class="fc" id="L35">            DocumentBuilder builder = factory.newDocumentBuilder();</span>
+<span class="fc" id="L36">            Document doc = builder.newDocument();</span>
+
+<span class="fc" id="L38">            Element root = doc.createElement(&quot;academicSystem&quot;);</span>
+<span class="fc" id="L39">            doc.appendChild(root);</span>
+
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            for (AcademicClass academicClass : classes) {</span>
+<span class="fc" id="L42">                Element classElement = doc.createElement(&quot;class&quot;);</span>
+
+<span class="fc" id="L44">                Element code = doc.createElement(&quot;code&quot;);</span>
+<span class="fc" id="L45">                code.setTextContent(academicClass.getCode());</span>
+<span class="fc" id="L46">                classElement.appendChild(code);</span>
+
+<span class="fc" id="L48">                Element title = doc.createElement(&quot;title&quot;);</span>
+<span class="fc" id="L49">                title.setTextContent(academicClass.getTitle());</span>
+<span class="fc" id="L50">                classElement.appendChild(title);</span>
+
+<span class="fc" id="L52">                Element assessmentsElement = doc.createElement(&quot;assessments&quot;);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">                for (Assessment assessment : academicClass.getAssessments()) {</span>
+<span class="fc" id="L54">                    Element assessmentElement = doc.createElement(&quot;assessment&quot;);</span>
+
+<span class="fc" id="L56">                    Element type = doc.createElement(&quot;type&quot;);</span>
+<span class="fc" id="L57">                    type.setTextContent(assessment.getType());</span>
+<span class="fc" id="L58">                    assessmentElement.appendChild(type);</span>
+
+<span class="fc" id="L60">                    Element value = doc.createElement(&quot;value&quot;);</span>
+<span class="fc" id="L61">                    value.setTextContent(String.valueOf(assessment.getValue()));</span>
+<span class="fc" id="L62">                    assessmentElement.appendChild(value);</span>
+
+<span class="fc" id="L64">                    Element weight = doc.createElement(&quot;weight&quot;);</span>
+<span class="fc" id="L65">                    weight.setTextContent(String.valueOf(assessment.getWeight()));</span>
+<span class="fc" id="L66">                    assessmentElement.appendChild(weight);</span>
+
+<span class="fc" id="L68">                    assessmentsElement.appendChild(assessmentElement);</span>
+<span class="fc" id="L69">                }</span>
+<span class="fc" id="L70">                classElement.appendChild(assessmentsElement);</span>
+<span class="fc" id="L71">                root.appendChild(classElement);</span>
+<span class="fc" id="L72">            }</span>
+
+<span class="fc" id="L74">            Transformer transformer = TransformerFactory.newInstance().newTransformer();</span>
+<span class="fc" id="L75">            transformer.setOutputProperty(OutputKeys.INDENT, &quot;yes&quot;);</span>
+<span class="fc" id="L76">            transformer.setOutputProperty(&quot;{http://xml.apache.org/xslt}indent-amount&quot;, &quot;2&quot;);</span>
+<span class="fc" id="L77">            transformer.transform(new DOMSource(doc), new StreamResult(new File(FILE_PATH)));</span>
+
+<span class="fc" id="L79">            logger.info(&quot;Persistência em XML concluída com sucesso. {} turma(s) salva(s).&quot;, classes.size());</span>
+
+<span class="nc" id="L81">        } catch (Exception e) {</span>
+<span class="nc" id="L82">            logger.error(&quot;Erro ao salvar dados em XML: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L83">            throw new RuntimeException(&quot;Falha ao salvar dados no arquivo XML: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L84">        }</span>
+<span class="fc" id="L85">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

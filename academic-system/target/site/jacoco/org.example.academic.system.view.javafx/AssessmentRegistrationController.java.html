@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssessmentRegistrationController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">academic-system</a> &gt; <a href="index.source.html" class="el_package">org.example.academic.system.view.javafx</a> &gt; <span class="el_source">AssessmentRegistrationController.java</span></div><h1>AssessmentRegistrationController.java</h1><pre class="source lang-java linenums">package org.example.academic.system.view.javafx;
+
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import org.example.academic.system.model.AcademicSystem;
+import org.example.academic.system.controller.AcademicSystemController;
+import org.example.academic.system.exception.AcademicSystemException;
+import org.example.academic.system.model.AcademicClass;
+import org.example.academic.system.model.User;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * TUS-2410 - Create JavaFX assessment registration screen.
+ *
+ * Allows professors and admins to register assessments in existing classes.
+ * Delegates to AcademicSystemController — no business logic in the GUI layer.
+ */
+<span class="nc" id="L21">public class AssessmentRegistrationController {</span>
+
+    @FXML private ComboBox&lt;String&gt; classComboBox;
+    @FXML private ComboBox&lt;String&gt; typeComboBox;
+    @FXML private TextField valueField;
+    @FXML private TextField weightField;
+    @FXML private Button registerButton;
+    @FXML private Label feedbackLabel;
+
+    private AcademicSystemController academicController;
+    private User currentUser;
+
+    @FXML
+    public void initialize() {
+<span class="nc" id="L35">        feedbackLabel.setVisible(false);</span>
+<span class="nc" id="L36">        academicController = new AcademicSystemController(AcademicSystem.getInstance());</span>
+
+<span class="nc" id="L38">        typeComboBox.setItems(FXCollections.observableArrayList(</span>
+                &quot;EXAM&quot;, &quot;PRACTICAL_ASSIGNMENT&quot;, &quot;SEMINAR&quot;, &quot;ASSIGNMENT&quot;));
+<span class="nc" id="L40">        typeComboBox.getSelectionModel().selectFirst();</span>
+
+<span class="nc" id="L42">        loadClasses();</span>
+<span class="nc" id="L43">    }</span>
+
+    public void initializeWithUser(User user) {
+<span class="nc" id="L46">        this.currentUser = user;</span>
+<span class="nc" id="L47">    }</span>
+
+    private void loadClasses() {
+<span class="nc" id="L50">        List&lt;AcademicClass&gt; classes = AcademicSystem.getInstance().getClasses();</span>
+<span class="nc" id="L51">        List&lt;String&gt; classCodes = classes.stream()</span>
+<span class="nc" id="L52">                .map(AcademicClass::getCode)</span>
+<span class="nc" id="L53">                .collect(Collectors.toList());</span>
+<span class="nc" id="L54">        classComboBox.setItems(FXCollections.observableArrayList(classCodes));</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (!classCodes.isEmpty()) {</span>
+<span class="nc" id="L56">            classComboBox.getSelectionModel().selectFirst();</span>
+        }
+<span class="nc" id="L58">    }</span>
+
+    @FXML
+    private void handleRegister() {
+<span class="nc" id="L62">        String classCode = classComboBox.getValue();</span>
+<span class="nc" id="L63">        String type = typeComboBox.getValue();</span>
+<span class="nc" id="L64">        String valueText = valueField.getText().trim();</span>
+<span class="nc" id="L65">        String weightText = weightField.getText().trim();</span>
+
+<span class="nc bnc" id="L67" title="All 8 branches missed.">        if (classCode == null || type == null || valueText.isEmpty() || weightText.isEmpty()) {</span>
+<span class="nc" id="L68">            showFeedback(&quot;Preencha todos os campos.&quot;, true);</span>
+<span class="nc" id="L69">            return;</span>
+        }
+
+        try {
+<span class="nc" id="L73">            double value = Double.parseDouble(valueText);</span>
+<span class="nc" id="L74">            double weight = Double.parseDouble(weightText);</span>
+
+<span class="nc" id="L76">            academicController.registerAssessment(currentUser, classCode, type, value, weight);</span>
+<span class="nc" id="L77">            showFeedback(&quot;Avaliação cadastrada com sucesso na turma &quot; + classCode + &quot;!&quot;, false);</span>
+<span class="nc" id="L78">            valueField.clear();</span>
+<span class="nc" id="L79">            weightField.clear();</span>
+<span class="nc" id="L80">        } catch (NumberFormatException ex) {</span>
+<span class="nc" id="L81">            showFeedback(&quot;Valor e peso devem ser números válidos.&quot;, true);</span>
+<span class="nc" id="L82">        } catch (AcademicSystemException ex) {</span>
+<span class="nc" id="L83">            showFeedback(&quot;Erro: &quot; + ex.getMessage(), true);</span>
+<span class="nc" id="L84">        }</span>
+<span class="nc" id="L85">    }</span>
+
+    @FXML
+    private void handleClear() {
+<span class="nc" id="L89">        valueField.clear();</span>
+<span class="nc" id="L90">        weightField.clear();</span>
+<span class="nc" id="L91">        feedbackLabel.setVisible(false);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (!classComboBox.getItems().isEmpty()) {</span>
+<span class="nc" id="L93">            classComboBox.getSelectionModel().selectFirst();</span>
+        }
+<span class="nc" id="L95">        typeComboBox.getSelectionModel().selectFirst();</span>
+<span class="nc" id="L96">    }</span>
+
+    private void showFeedback(String message, boolean isError) {
+<span class="nc" id="L99">        feedbackLabel.setText(message);</span>
+<span class="nc" id="L100">        feedbackLabel.getStyleClass().removeAll(&quot;success&quot;, &quot;error&quot;);</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        feedbackLabel.getStyleClass().add(isError ? &quot;error&quot; : &quot;success&quot;);</span>
+<span class="nc" id="L102">        feedbackLabel.setVisible(true);</span>
+<span class="nc" id="L103">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

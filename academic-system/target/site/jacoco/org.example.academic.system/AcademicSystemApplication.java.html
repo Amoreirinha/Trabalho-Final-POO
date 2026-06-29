@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AcademicSystemApplication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">academic-system</a> &gt; <a href="index.source.html" class="el_package">org.example.academic.system</a> &gt; <span class="el_source">AcademicSystemApplication.java</span></div><h1>AcademicSystemApplication.java</h1><pre class="source lang-java linenums">package org.example.academic.system;
+
+import org.example.academic.system.exception.AcademicSystemException;
+import org.example.academic.system.exception.AuthenticationException;
+import org.example.academic.system.exception.AuthorizationException;
+import org.example.academic.system.exception.InvalidMenuOptionException;
+import org.example.academic.system.model.AcademicSystem;
+import org.example.academic.system.model.Role;
+import org.example.academic.system.model.User;
+import org.example.academic.system.controller.AcademicSystemController;
+import org.example.academic.system.controller.AuthenticationController;
+import org.example.academic.system.security.AuthenticationService;
+import org.example.academic.system.security.RoleBasedMenu;
+import org.example.academic.system.security.Session;
+import org.example.academic.system.security.UserRepository;
+import org.example.academic.system.repository.UserTxtRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Scanner;
+
+/**
+ * Ponto de entrada da aplicação via linha de comando (US-0000, US-2364).
+ */
+<span class="nc" id="L26">public class AcademicSystemApplication {</span>
+
+<span class="nc" id="L28">    private static final Logger logger = LoggerFactory.getLogger(AcademicSystemApplication.class);</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L31">        logger.info(&quot;Iniciando Academic System.&quot;);</span>
+<span class="nc" id="L32">        AcademicSystem.getInstance();</span>
+
+<span class="nc" id="L34">        AuthenticationService authService = new AuthenticationService(new UserRepository());</span>
+<span class="nc" id="L35">        AuthenticationController authController = new AuthenticationController(authService);</span>
+<span class="nc" id="L36">        AcademicSystemController controller = new AcademicSystemController();</span>
+<span class="nc" id="L37">        Scanner scanner = new Scanner(System.in);</span>
+
+        while (true) {
+            // Login loop
+<span class="nc" id="L41">            User user = null;</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">            while (user == null) {</span>
+<span class="nc" id="L43">                System.out.print(&quot;Usuário: &quot;);</span>
+<span class="nc" id="L44">                String username = scanner.nextLine().trim();</span>
+<span class="nc" id="L45">                System.out.print(&quot;Senha: &quot;);</span>
+<span class="nc" id="L46">                String password = scanner.nextLine().trim();</span>
+                try {
+<span class="nc" id="L48">                    user = authController.authenticate(username, password);</span>
+<span class="nc" id="L49">                    System.out.println(&quot;Login realizado com sucesso! Bem-vindo, &quot; + user.getUsername());</span>
+<span class="nc" id="L50">                } catch (AuthenticationException ex) {</span>
+<span class="nc" id="L51">                    System.out.println(&quot;Credenciais inválidas. Tente novamente.&quot;);</span>
+<span class="nc" id="L52">                }</span>
+<span class="nc" id="L53">            }</span>
+
+            // Convert model.Role → security.Role for menu
+<span class="nc" id="L56">            org.example.academic.system.security.Role secRole =</span>
+<span class="nc" id="L57">                org.example.academic.system.security.Role.valueOf(user.getRole().name());</span>
+
+            // Menu loop
+<span class="nc" id="L60">            boolean loggedIn = true;</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            while (loggedIn) {</span>
+<span class="nc" id="L62">                RoleBasedMenu.displayMenu(secRole);</span>
+                try {
+<span class="nc" id="L64">                    int option = Integer.parseInt(scanner.nextLine().trim());</span>
+<span class="nc" id="L65">                    RoleBasedMenu.validateOption(option, secRole);</span>
+<span class="nc" id="L66">                    Map&lt;Integer, String&gt; opts = RoleBasedMenu.getMenuOptions(secRole);</span>
+<span class="nc" id="L67">                    String optName = opts.get(option);</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                    if (optName.contains(&quot;Cadastrar avaliação&quot;)) {</span>
+<span class="nc" id="L70">                        System.out.print(&quot;Código da turma: &quot;);</span>
+<span class="nc" id="L71">                        String code = scanner.nextLine().trim();</span>
+<span class="nc" id="L72">                        System.out.print(&quot;Tipo (EXAM/PRACTICAL_ASSIGNMENT/SEMINAR/ASSIGNMENT): &quot;);</span>
+<span class="nc" id="L73">                        String type = scanner.nextLine().trim();</span>
+<span class="nc" id="L74">                        System.out.print(&quot;Valor: &quot;);</span>
+<span class="nc" id="L75">                        double value = Double.parseDouble(scanner.nextLine().trim());</span>
+<span class="nc" id="L76">                        System.out.print(&quot;Peso: &quot;);</span>
+<span class="nc" id="L77">                        double weight = Double.parseDouble(scanner.nextLine().trim());</span>
+<span class="nc" id="L78">                        controller.registerAssessment(user, code, type, value, weight);</span>
+<span class="nc" id="L79">                        System.out.println(&quot;Avaliação registrada com sucesso.&quot;);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                    } else if (optName.contains(&quot;relatório de avaliações&quot;)) {</span>
+<span class="nc" id="L81">                        System.out.println(controller.generateClassSummaryReport(user));</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                    } else if (optName.contains(&quot;relatório de peso&quot;)) {</span>
+<span class="nc" id="L83">                        System.out.println(controller.generateWeightReport(user));</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                    } else if (optName.contains(&quot;Cadastrar turma&quot;)) {</span>
+<span class="nc" id="L85">                        System.out.print(&quot;Código: &quot;);</span>
+<span class="nc" id="L86">                        String code = scanner.nextLine().trim();</span>
+<span class="nc" id="L87">                        System.out.print(&quot;Título: &quot;);</span>
+<span class="nc" id="L88">                        String title = scanner.nextLine().trim();</span>
+<span class="nc" id="L89">                        controller.registerClass(user, code, title);</span>
+<span class="nc" id="L90">                        System.out.println(&quot;Turma cadastrada com sucesso.&quot;);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                    } else if (optName.contains(&quot;Salvar&quot;)) {</span>
+<span class="nc" id="L92">                        controller.saveData(user);</span>
+<span class="nc" id="L93">                        System.out.println(&quot;Dados salvos com sucesso.&quot;);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">                    } else if (optName.contains(&quot;Configurar tipo&quot;)) {</span>
+<span class="nc" id="L95">                        System.out.print(&quot;Tipo (TXT/XML/JSON): &quot;);</span>
+<span class="nc" id="L96">                        String type = scanner.nextLine().trim();</span>
+<span class="nc" id="L97">                        controller.configurePersistence(user, type);</span>
+<span class="nc" id="L98">                        System.out.println(&quot;Persistência configurada para &quot; + type);</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">                    } else if (optName.contains(&quot;configuração de persistência&quot;)) {</span>
+<span class="nc" id="L100">                        System.out.println(controller.generatePersistenceReport(user));</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">                    } else if (optName.contains(&quot;Logout&quot;)) {</span>
+<span class="nc" id="L102">                        authService.logout();</span>
+<span class="nc" id="L103">                        loggedIn = false;</span>
+<span class="nc" id="L104">                        System.out.println(&quot;Logout realizado.&quot;);</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                    } else if (optName.contains(&quot;Sair&quot;)) {</span>
+<span class="nc" id="L106">                        System.out.println(&quot;Encerrando o sistema. Até logo!&quot;);</span>
+<span class="nc" id="L107">                        System.exit(0);</span>
+                    }
+<span class="nc" id="L109">                } catch (NumberFormatException ex) {</span>
+<span class="nc" id="L110">                    System.out.println(&quot;Entrada inválida. Digite um número.&quot;);</span>
+<span class="nc" id="L111">                } catch (InvalidMenuOptionException ex) {</span>
+<span class="nc" id="L112">                    System.out.println(&quot;Opção inválida: &quot; + ex.getMessage());</span>
+<span class="nc" id="L113">                } catch (AuthorizationException ex) {</span>
+<span class="nc" id="L114">                    System.out.println(&quot;Acesso negado: &quot; + ex.getMessage());</span>
+<span class="nc" id="L115">                } catch (AcademicSystemException ex) {</span>
+<span class="nc" id="L116">                    System.out.println(&quot;Erro: &quot; + ex.getMessage());</span>
+<span class="nc" id="L117">                }</span>
+            }
+<span class="nc" id="L119">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
