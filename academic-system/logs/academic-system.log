@@ -160,3 +160,17 @@
 2026-06-29 02:44:08 [INFO] o.e.a.s.AcademicSystemApplication - Iniciando Academic System.
 2026-06-29 02:44:08 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
 2026-06-29 02:44:17 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 02:54:45 [INFO] o.e.a.s.AcademicSystemApplication - Iniciando Academic System.
+2026-06-29 02:54:45 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 02:54:54 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 02:54:59 [INFO] o.e.a.system.service.ReportService - Gerando relatório de pesos. Papel: PROFESSOR
+2026-06-29 02:55:04 [INFO] o.e.a.s.s.AuthenticationService - Logout realizado. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:08:42 [INFO] o.e.a.s.AcademicSystemApplication - Iniciando Academic System.
+2026-06-29 03:08:42 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:09:01 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:19:27 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:20:19 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'professor', Papel: PROFESSOR
+2026-06-29 03:20:28 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:20:28 [INFO] o.e.a.system.service.ReportService - Gerando relatório de avaliações por turma. Papel: PROFESSOR
+2026-06-29 03:20:41 [INFO] o.e.a.s.service.PersistenceService - PersistenceService inicializado. Tipo padrão: TXT
+2026-06-29 03:20:56 [INFO] o.e.a.s.s.AuthenticationService - Login realizado com sucesso. Usuário: 'admin', Papel: ADMIN
