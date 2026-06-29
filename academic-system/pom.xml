@@ -11,11 +11,7 @@
 
     <properties>
         <!-- Pessoa 5 spec: pipeline para Java 25 -->
-<<<<<<< HEAD
         <maven.compiler.release>21</maven.compiler.release>
-=======
-        <maven.compiler.release>17</maven.compiler.release>
->>>>>>> 9643520f26d8d62b799ddda3ea5a0d2daf1a84f6
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- TODO (time team): point this at the real entry point once

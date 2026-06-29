@@ -2,25 +2,15 @@ package org.example.academic.system;
 
 import org.example.academic.system.exception.AcademicSystemException;
 import org.example.academic.system.model.AcademicSystem;
-<<<<<<< HEAD
 import org.example.academic.system.service.TurmaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-=======
-import org.example.academic.system.model.Turma;
-import org.example.academic.system.service.TurmaService;
-import org.junit.jupiter.api.BeforeEach;
->>>>>>> 9643520f26d8d62b799ddda3ea5a0d2daf1a84f6
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
-<<<<<<< HEAD
  * TUS-2401 — Test ClassService (TurmaService) behavior.
-=======
- * TUS-2401: Testes automatizados para TurmaService
->>>>>>> 9643520f26d8d62b799ddda3ea5a0d2daf1a84f6
  */
 class TurmaServiceTest {
 
@@ -29,7 +19,6 @@ class TurmaServiceTest {
 
     @BeforeEach
     void setUp() {
-<<<<<<< HEAD
         // Use a fresh instance via reflection or just use the singleton  
         academicSystem = AcademicSystem.getInstance();
         turmaService = new TurmaService(academicSystem);
@@ -55,43 +44,5 @@ class TurmaServiceTest {
     void blankTitleShouldThrow() {
         assertThrows(AcademicSystemException.class,
             () -> turmaService.registerClass("BCC001", ""));
-=======
-        academicSystem = AcademicSystem.getInstance();
-        academicSystem.getAllTurmas().clear();
-        turmaService = new TurmaService();
-    }
-
-    @Test
-    void testRegisterValidTurma() {
-        turmaService.registerTurma("POO-2024-1", "Programação Orientada a Objetos");
-
-        Turma turma = academicSystem.findTurmaByCode("POO-2024-1");
-        assertNotNull(turma);
-        assertEquals("POO-2024-1", turma.getCode());
-        assertEquals("Programação Orientada a Objetos", turma.getTitle());
-    }
-
-    @Test
-    void testRegisterTurmaWithBlankCode() {
-        assertThrows(AcademicSystemException.class, () -> {
-            turmaService.registerTurma("", "Título");
-        });
-    }
-
-    @Test
-    void testRegisterTurmaWithBlankTitle() {
-        assertThrows(AcademicSystemException.class, () -> {
-            turmaService.registerTurma("POO-2024", "");
-        });
-    }
-
-    @Test
-    void testRegisterDuplicateTurma() {
-        turmaService.registerTurma("POO-2024-1", "POO");
-
-        assertThrows(AcademicSystemException.class, () -> {
-            turmaService.registerTurma("POO-2024-1", "Outro título");
-        });
->>>>>>> 9643520f26d8d62b799ddda3ea5a0d2daf1a84f6
     }
 }
