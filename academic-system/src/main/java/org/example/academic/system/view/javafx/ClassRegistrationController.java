@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import org.example.academic.system.AcademicSystem;
+import org.example.academic.system.model.AcademicSystem;
 import org.example.academic.system.controller.AcademicSystemController;
 import org.example.academic.system.exception.AcademicSystemException;
 import org.example.academic.system.exception.AuthorizationException;

@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.academic.system.AcademicSystem;
+import org.example.academic.system.model.AcademicSystem;
 import org.example.academic.system.model.AcademicClass;
 import org.example.academic.system.model.Assessment;
 import org.example.academic.system.model.User;

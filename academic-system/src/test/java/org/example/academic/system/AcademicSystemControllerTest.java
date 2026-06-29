@@ -1,53 +1,65 @@
 package org.example.academic.system;
 
-import org.junit.jupiter.api.Disabled;
+import org.example.academic.system.controller.AcademicSystemController;
+import org.example.academic.system.exception.AuthorizationException;
+import org.example.academic.system.model.Role;
+import org.example.academic.system.model.User;
+import org.example.academic.system.service.AssessmentService;
+import org.example.academic.system.service.PersistenceService;
+import org.example.academic.system.service.ReportService;
+import org.example.academic.system.service.TurmaService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * TUS-2405 — Test AcademicSystemController delegation behavior.
- *
- * <p><b>Atualização:</b> o {@code AcademicSystemController} já foi criado
- * (commit "Implementado AcademicSystemController com methodos assessment"),
- * mas ele importa três classes que ainda não existem em nenhum lugar do
- * repositório:
- * <ul>
- *   <li>{@code org.example.academic.system.model.AcademicSystem}</li>
- *   <li>{@code org.example.academic.system.model.Turma}</li>
- *   <li>{@code org.example.academic.system.service.AssessmentService}</li>
- * </ul>
- * Ou seja, o controller em si ainda não compila — não é só esse teste que
- * está bloqueado, é o build inteiro. Vale avisar o grupo: o pacote
- * {@code model} (com a classe de domínio principal) nunca foi criado, e
- * várias telas JavaFX e o PersistenceService já importam
- * {@code model.AcademicClass} / {@code model.Assessment} / {@code model.User}
- * / {@code model.Role} — só que {@code User}/{@code Role} hoje existem em
- * {@code security}, não em {@code model}. E o controller usa o nome
- * {@code Turma} enquanto o resto do código usa {@code AcademicClass} pro
- * que parece ser o mesmo conceito — essa inconsistência de nomes precisa
- * ser resolvida pelo time antes de qualquer coisa compilar.
- *
- * <p>Por isso esta classe de teste não referencia nenhum desses tipos —
- * fazer isso quebraria a compilação do módulo de teste pra todo mundo.
- *
- * <p><b>Plano de teste</b> (implementar assim que o domínio estabilizar):
- * <ol>
- *   <li>Mockar {@code AssessmentService} (e qualquer outro service que o
- *       controller passar a receber) com {@code @Mock}.</li>
- *   <li>Instanciar o controller injetando os mocks pelo construtor (hoje
- *       ele usa {@code new AssessmentService()} direto — para ser
- *       testável por mock, isso precisa virar injeção de dependência).</li>
- *   <li>Chamar {@code registerAssessment(...)} e {@code registerClass(...)}
- *       e usar {@code verify(mock).metodo(argumentos)} para confirmar a
- *       delegação correta.</li>
- *   <li>Cobrir o caminho de erro: o controller deve propagar
- *       {@code AcademicSystemException} corretamente.</li>
- * </ol>
  */
+@ExtendWith(MockitoExtension.class)
 class AcademicSystemControllerTest {
 
+    @Mock private TurmaService turmaService;
+    @Mock private AssessmentService assessmentService;
+    @Mock private PersistenceService persistenceService;
+    @Mock private ReportService reportService;
+
+    private AcademicSystemController controller;
+    private User adminUser;
+    private User professorUser;
+
+    @BeforeEach
+    void setUp() {
+        controller = new AcademicSystemController(
+            turmaService, assessmentService, persistenceService, reportService);
+        adminUser = new User("admin", "admin123", Role.ADMIN);
+        professorUser = new User("prof", "prof123", Role.PROFESSOR);
+    }
+
     @Test
-    @Disabled("Bloqueado: AcademicSystemController referencia model.AcademicSystem/Turma e service.AssessmentService, que não existem no repositório ainda")
-    void delegatesMenuActionsToServices() {
-        // Intencionalmente vazio — ver plano de teste no Javadoc da classe.
+    @DisplayName("TUS-2405: Controller deve delegar registerClass ao TurmaService")
+    void shouldDelegateRegisterClassToService() {
+        controller.registerClass(adminUser, "BCC001", "POO");
+        verify(turmaService).registerClass("BCC001", "POO");
+    }
+
+    @Test
+    @DisplayName("TUS-2405: PROFESSOR não pode registrar turma")
+    void professorShouldNotRegisterClass() {
+        assertThrows(AuthorizationException.class,
+            () -> controller.registerClass(professorUser, "BCC001", "POO"));
+        verifyNoInteractions(turmaService);
+    }
+
+    @Test
+    @DisplayName("TUS-2405: Controller deve delegar registerAssessment ao AssessmentService")
+    void shouldDelegateRegisterAssessmentToService() {
+        controller.registerAssessment(adminUser, "BCC001", "EXAM", 8.0, 0.5);
+        verify(assessmentService).registerAssessment("BCC001", "EXAM", 8.0, 0.5);
     }
 }

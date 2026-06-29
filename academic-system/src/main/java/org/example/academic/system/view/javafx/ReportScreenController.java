@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
-import org.example.academic.system.AcademicSystem;
+import org.example.academic.system.model.AcademicSystem;
 import org.example.academic.system.controller.AcademicSystemController;
 import org.example.academic.system.model.Role;
 import org.example.academic.system.model.User;

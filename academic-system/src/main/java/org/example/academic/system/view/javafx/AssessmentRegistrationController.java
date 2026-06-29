@@ -3,7 +3,7 @@ package org.example.academic.system.view.javafx;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.academic.system.AcademicSystem;
+import org.example.academic.system.model.AcademicSystem;
 import org.example.academic.system.controller.AcademicSystemController;
 import org.example.academic.system.exception.AcademicSystemException;
 import org.example.academic.system.model.AcademicClass;

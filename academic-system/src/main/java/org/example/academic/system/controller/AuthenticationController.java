@@ -1,15 +1,13 @@
 package org.example.academic.system.controller;
 
+import org.example.academic.system.exception.AuthenticationException;
+import org.example.academic.system.model.Role;
 import org.example.academic.system.model.User;
 import org.example.academic.system.security.AuthenticationService;
-import org.example.academic.system.exception.AuthenticationException;
 
 /**
- * TUS-2414 - Introduce AuthenticationController for JavaFX login.
- *
- * Handles authentication requests from the JavaFX user interface,
- * decoupling the GUI from service implementations and following the
- * same architectural pattern used throughout the application.
+ * TUS-2414 - Ponte entre a GUI JavaFX e o AuthenticationService.
+ * Converte security.User → model.User para desacoplar a camada de apresentação.
  */
 public class AuthenticationController {
 
@@ -20,14 +18,12 @@ public class AuthenticationController {
     }
 
     /**
-     * Authenticates the user with the given credentials.
-     *
-     * @param username the username
-     * @param password the password
-     * @return the authenticated User
-     * @throws AuthenticationException if credentials are invalid
+     * Autentica o usuário e retorna um model.User (usado pela GUI JavaFX).
      */
     public User authenticate(String username, String password) throws AuthenticationException {
-        return authenticationService.authenticate(username, password);
+        org.example.academic.system.security.User secUser =
+            authenticationService.authenticate(username, password);
+        Role role = Role.valueOf(secUser.getRole().name());
+        return new User(secUser.getUsername(), secUser.getPassword(), role);
     }
 }
