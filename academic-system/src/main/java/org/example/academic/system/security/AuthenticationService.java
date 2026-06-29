@@ -1,69 +1,106 @@
 package org.example.academic.system.security;
 
 import org.example.academic.system.exception.AuthenticationException;
+import org.example.academic.system.exception.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Serviço responsável por autenticação e autorização baseada em papéis (RBAC).
+ * Implementa US-2366 e US-2369.
+ * Registra eventos de segurança em log (TUS-2391, TUS-2392).
+ */
 public class AuthenticationService {
+
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
-    private static AuthenticationService instance;
-    private final Map<String, User> users;
-    private User currentUser;
-    
-    private AuthenticationService() {
-        users = new HashMap<>();
-        initializeDefaultUsers();
+
+    private final UserRepository userRepository;
+    private final Session session;
+
+    public AuthenticationService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.session = Session.getInstance();
     }
-    
-    public static synchronized AuthenticationService getInstance() {
-        if (instance == null) {
-            instance = new AuthenticationService();
+
+    /**
+     * Autentica um usuário com base em username e senha.
+     * Lança AuthenticationException em caso de credenciais inválidas (US-2369, AC-1).
+     * Senhas nunca são registradas em log (US-2366, AC-6).
+     *
+     * @param username nome de usuário
+     * @param password senha
+     * @return usuário autenticado
+     */
+    public User authenticate(String username, String password) {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null || !user.getPassword().equals(password)) {
+            // TUS-2391: registra tentativa falha sem expor a senha
+            logger.warn("Tentativa de login malsucedida para o usuário: '{}'", username);
+            throw new AuthenticationException("Credenciais inválidas. Verifique o usuário e a senha.");
         }
-        return instance;
-    }
-    
-    private void initializeDefaultUsers() {
-        users.put("admin", new User("admin", "admin123", Role.ADMIN));
-        users.put("professor", new User("professor", "prof123", Role.PROFESSOR));
-    }
-    
-    public User authenticate(String username, String password) throws AuthenticationException {
-        if (username == null || username.trim().isEmpty()) {
-            logger.warn("Tentativa de login com username vazio");
-            throw new AuthenticationException("Username não pode ser vazio");
-        }
-        
-        User user = users.get(username);
-        
-        if (user == null) {
-            logger.warn("Tentativa de login com usuário inexistente: {}", username);
-            throw new AuthenticationException("Usuário ou senha inválidos");
-        }
-        
-        if (!user.getPassword().equals(password)) {
-            logger.warn("Tentativa de login com senha incorreta para usuário: {}", username);
-            throw new AuthenticationException("Usuário ou senha inválidos");
-        }
-        
-        currentUser = user;
-        logger.info("Login bem-sucedido: {} ({})", username, user.getRole());
+
+        session.login(user);
+        // TUS-2391: registra login bem-sucedido
+        logger.info("Login realizado com sucesso. Usuário: '{}', Papel: {}", username, user.getRole());
         return user;
     }
-    
+
+    /**
+     * Encerra a sessão atual (US-2379).
+     * Registra o evento de logout em log (TUS-2391).
+     */
     public void logout() {
-        if (currentUser != null) {
-            logger.info("Logout realizado: {}", currentUser.getUsername());
-            currentUser = null;
+        User user = session.getCurrentUser();
+        if (user != null) {
+            logger.info("Logout realizado. Usuário: '{}', Papel: {}", user.getUsername(), user.getRole());
         }
+        session.logout();
     }
-    
-    public User getCurrentUser() {
-        return currentUser;
+
+    /**
+     * Verifica se o usuário atual possui o papel exigido para executar uma operação.
+     * Lança AuthorizationException se o acesso for negado (US-2369, AC-2).
+     * Registra falhas de autorização em log (TUS-2392).
+     *
+     * @param requiredRole papel necessário para a operação
+     * @param operationName nome da operação (para fins de auditoria)
+     */
+    public void authorize(Role requiredRole, String operationName) {
+        User user = session.getCurrentUser();
+
+        if (user == null || user.getRole() != requiredRole) {
+            String userInfo = (user != null) ? user.getRole().toString() : "SEM SESSÃO";
+            // TUS-2392: registra falha de autorização
+            logger.warn("Acesso negado. Papel atual: '{}'. Operação protegida: '{}'.", userInfo, operationName);
+            throw new AuthorizationException(
+                "Acesso negado. Esta operação requer o papel: " + requiredRole + "."
+            );
+        }
+
+        // TUS-2392: registra acesso autorizado
+        logger.info("Acesso autorizado. Usuário: '{}', Papel: {}, Operação: '{}'",
+            user.getUsername(), user.getRole(), operationName);
     }
-    
+
+    /**
+     * Verifica se o usuário atual é ADMIN.
+     */
+    public void requireAdmin(String operationName) {
+        authorize(Role.ADMIN, operationName);
+    }
+
+    /**
+     * Verifica se há sessão ativa (qualquer papel).
+     */
     public boolean isAuthenticated() {
-        return currentUser != null;
+        return session.isAuthenticated();
+    }
+
+    /**
+     * Retorna o usuário da sessão atual.
+     */
+    public User getCurrentUser() {
+        return session.getCurrentUser();
     }
 }

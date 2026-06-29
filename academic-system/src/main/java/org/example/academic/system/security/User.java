@@ -1,31 +1,40 @@
 package org.example.academic.system.security;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.Objects;
+
+/**
+ * Representa um usuário autenticado no sistema (US-2366).
+ * A igualdade é definida pelo username (TUS-2382).
+ */
+@Getter
+@ToString(exclude = "password")
 public class User {
-    private String username;
-    private String password;
-    private Role role;
-    
-    public boolean hasRole(Role requiredRole) {
-        return this.role == requiredRole;
+
+    private final String username;
+    private final String password;
+    private final Role role;
+
+    public User(String username, String password, Role role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
-    
+
+    /**
+     * Dois usuários são iguais se tiverem o mesmo username (TUS-2382).
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return username != null && username.equals(user.username);
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(username, user.username);
     }
-    
+
     @Override
     public int hashCode() {
-        return username != null ? username.hashCode() : 0;
+        return Objects.hash(username);
     }
 }

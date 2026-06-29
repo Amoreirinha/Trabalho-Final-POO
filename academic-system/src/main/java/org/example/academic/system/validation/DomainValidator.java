@@ -1,38 +1,43 @@
 package org.example.academic.system.validation;
 
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import jakarta.validation.ConstraintViolation;
-import org.example.academic.system.exception.DomainException;
+import org.example.academic.system.exception.AcademicSystemException;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Componente centralizador de validação de objetos de domínio usando Jakarta Bean Validation.
+ * Implementa TUS-2371.
+ * Converte violações de validação em AcademicSystemException (AC-7).
+ */
 public class DomainValidator {
-    private static DomainValidator instance;
-    private final Validator validator;
-    
-    private DomainValidator() {
+
+    private static final Validator validator;
+
+    static {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
-            this.validator = factory.getValidator();
+            validator = factory.getValidator();
         }
     }
-    
-    public static synchronized DomainValidator getInstance() {
-        if (instance == null) {
-            instance = new DomainValidator();
-        }
-        return instance;
-    }
-    
-    public <T> void validate(T object) throws DomainException {
+
+    /**
+     * Valida o objeto fornecido.
+     * Lança AcademicSystemException se houver violações (TUS-2371, AC-7).
+     *
+     * @param object objeto a ser validado
+     * @param <T>    tipo do objeto
+     */
+    public static <T> void validate(T object) {
         Set<ConstraintViolation<T>> violations = validator.validate(object);
-        
         if (!violations.isEmpty()) {
-            String errorMessage = violations.stream()
+            String messages = violations.stream()
                 .map(v -> v.getPropertyPath() + ": " + v.getMessage())
-                .collect(Collectors.joining(", "));
-            throw new DomainException("Erro de validação: " + errorMessage);
+                .collect(Collectors.joining("; "));
+            throw new AcademicSystemException("Dados inválidos: " + messages);
         }
     }
 }

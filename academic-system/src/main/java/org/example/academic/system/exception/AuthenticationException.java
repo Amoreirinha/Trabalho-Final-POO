@@ -1,13 +1,16 @@
-// AuthenticationException.java - Para erros de autenticação (US-2369)
 package org.example.academic.system.exception;
 
-public class AuthenticationException extends AcademicSystemException {
+/**
+ * Exceção lançada quando a autenticação falha (US-2369).
+ * Herda de SecurityException conforme AC-3.
+ */
+public class AuthenticationException extends SecurityException {
+
     public AuthenticationException(String message) {
         super(message);
     }
-    
+
     public AuthenticationException(String message, Throwable cause) {
         super(message, cause);
     }
 }
-
